@@ -67,8 +67,31 @@ def write_output(points):
         stdout.write('    </Placemark>\n')
     stdout.write(template_after)
 
+
+def gga2kml(gga_file, kml_file):
+    points = convert(finput(gga_file))
+
+    f_out = open(kml_file, 'w')
+    f_out.write(template_before)
+    f_out.write('      <LineString><coordinates>%s</coordinates></LineString>\n' % ' '.join(
+        '%.7f,%.7f,%s' % p[1:] for p in points))
+    f_out.write(template_middle)
+    t = ''
+    for p in points:
+        if p[0][:4] == t:
+            continue
+        t = p[0][:4]
+        f_out.write('    <Placemark>\n')
+        f_out.write('      <name>%s</name>\n' % ('%s:%s' % (t[:2], t[2:])))
+        f_out.write('      <styleUrl>#blueDot</styleUrl>\n')
+        f_out.write('      <Point><coordinates>%s</coordinates></Point>\n' % ('%.7f,%.7f,%s' % p[1:]))
+        f_out.write('    </Placemark>\n')
+    f_out.write(template_after)
+
+
 def main(argv):
     write_output(convert(finput()))
+
 
 if __name__ == "__main__":
     exit(main(argv))

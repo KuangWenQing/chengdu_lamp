@@ -6,25 +6,30 @@ import pandas as pd
 
 from base_function import analysis_gga, lla_to_xyz, sort_and_print_50_95_99
 
-path = "D:\\work\\chengdu_log\\2021-06-01_06_15\\"
+path = "D:\\work\\chengdu_log\\2021-07-4_07_11\\"
+path += 'whole_gga\\'
 file_lst = [f for f in os.listdir(path) if f.endswith('whole.gga')]
 df = pd.read_excel("../true_pos_extract/lamp_information.xlsx")
 
 
-def get_true_pos(file_name: str):
+def get_true_pos_and_lamppost(file_name: str):
     lamp_id = file_name.split('_')[0]
     for i in range(len(df)):
         if df.loc[i]["id"] == lamp_id:
-            return df.loc[i]["position"]
-    return None
+            return df.loc[i]["position"], df.loc[i]['Lamppost']
+    return None, None
 
 
 def analysis_file(pathname: str, true_xyz_: tuple):
     dis_xyz_lst = []
     dis_en_lst = []
     with open(pathname, 'r') as fd:
+        print("abnormal GGA")
         for row in fd:
             time_sec, llh, xyz, ENU, dis_xyz, dis_en = analysis_gga(true_xyz_, row)
+            if dis_en > 100:
+                print(row)
+                continue
             dis_xyz_lst.append(round(dis_xyz, 2))
             dis_en_lst.append(round(dis_en, 2))
     return dis_xyz_lst, dis_en_lst
@@ -34,7 +39,7 @@ if __name__ == "__main__":
 
     for name in file_lst:
         print(name)
-        true_pos = get_true_pos(name)
+        true_pos, lamppost = get_true_pos_and_lamppost(name)
         if not true_pos:
             print("we haven't this lamp")
             sys.exit()
@@ -43,20 +48,21 @@ if __name__ == "__main__":
         true_xyz = lla_to_xyz(*true_pos_lla)
         print("xyz = ", true_xyz)
         xyz_diff, en_diff = analysis_file(path + name, true_xyz)
-        print("ENU", xyz_diff)
+        # print("ENU", xyz_diff)
         sort_and_print_50_95_99(xyz_diff, 'ENU')
-        print("EN", en_diff)
+        # print("EN", en_diff)
         sort_and_print_50_95_99(en_diff, 'EN')
         print()
 
         fig1 = plt.figure(1)
-        plt.suptitle(name)
+        plt.suptitle(name + ', lamppost is: ' + lamppost)
         plt.subplot(211)
         plt.title('ENU')
         plt.plot([x for x in range(len(xyz_diff))], xyz_diff, marker='*', label='enu')
+        plt.legend()  # 不加该语句无法显示 label
         plt.subplot(212)
         plt.title('EN')
-        plt.plot([x for x in range(len(en_diff))], en_diff, marker='x', label='nu')
+        plt.plot([x for x in range(len(en_diff))], en_diff, marker='x', label='en')
         plt.legend()  # 不加该语句无法显示 label
         plt.draw()
         plt.savefig(path + name + '.jpg')

@@ -1,8 +1,9 @@
-import os
+import os, sys
 import openpyxl
 import numpy as np
 import pandas as pd
 import shutil
+from nmea2kml import gga2kml
 from define_struct import parser_str_bin
 
 
@@ -106,7 +107,7 @@ light_dict = dict(zip(light_ID, light_pole_number))
 print(light_dict)
 
 
-path = "D:\\work\\chengdu_log\\2021-06-01_06_15\\"
+path = "D:\\work\\chengdu_log\\tmp\\"
 file_lst = (f for f in os.listdir(path) if f.endswith('.csv'))
 
 
@@ -170,10 +171,10 @@ if __name__ == "__main__":
                     if not isExists:
                         os.mkdir(path + time_of_date)
                     date_list.append(time_of_date)
-                    if hour_bak - hour_now > 0:
-                        print(gga, file=fd_gga_last)
-                    else:
-                        print(gga_bak, file=fd_gga_last)
+                    print(gga, file=fd_gga_last)
+                print(gga, file=fd_gga)
+            else:
+                print(gga, file=fd_gga_last)
                 print(gga, file=fd_gga)
             hour_bak = hour_now
             gga_bak = gga
@@ -189,12 +190,13 @@ if __name__ == "__main__":
         gga_path_name = path + file
         if os.path.getsize(gga_path_name):
             kml_path_name = gga_path_name[:-3] + "kml"
-            os.system('python3 ./nmea2kml.py ' + gga_path_name + ' > ' + kml_path_name)
+            # os.system('pythonw3 ./nmea2kml.py ' + gga_path_name + '>' + kml_path_name)
+            gga2kml(gga_path_name, kml_path_name)
         else:
             os.remove(gga_path_name)
 
-    all_file = (f for f in os.listdir(path) if 'whole' not in f)
-    for file in all_file:
+    date_file = (f for f in os.listdir(path) if 'whole' not in f and 'last' not in f)
+    for file in date_file:
         path_file = path + file
         if os.path.isdir(path_file):     # 是子文件夹
             continue
@@ -202,3 +204,13 @@ if __name__ == "__main__":
             if date in file:
                 shutil.move(path_file, path+date+'/'+file)
                 break
+
+    os.mkdir(path + 'last_gga')
+    last_file = (f for f in os.listdir(path) if 'last' in f)
+    for file in last_file:
+        shutil.move(path + file, path + 'last_gga')
+
+    os.mkdir(path + 'whole_gga')
+    whole_file = (f for f in os.listdir(path) if 'whole' in f)
+    for file in whole_file:
+        shutil.move(path + file, path + 'whole_gga')
