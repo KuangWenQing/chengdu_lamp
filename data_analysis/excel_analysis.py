@@ -99,15 +99,15 @@ def gga_produce(nparr: np.ndarray, gga_time="080808.00"):
     return gga_Template % (gga_time, lat_str, lon_str, alt)
 
 
-light_ID = ('000b7e42321d', '000b7e423210', '000b7e4231d6', '000b7e4231c9', '000b7e42317c',
-            '000b7e423136', '000b7e42320f', '000b7e4231d3', '000b7e4232f9', '000b7e4231c4')
-light_pole_number = ('D1', 'D11', 'D21', 'D31', 'D51', 'D61', 'D71', 'D81', 'D91', 'D101')
+# light_ID = ('000b7e42321d', '000b7e423210', '000b7e4231d6', '000b7e4231c9', '000b7e42317c',
+#             '000b7e423136', '000b7e42320f', '000b7e4231d3', '000b7e4232f9', '000b7e4231c4')
+# light_pole_number = ('D1', 'D11', 'D21', 'D31', 'D51', 'D61', 'D71', 'D81', 'D91', 'D101')
+#
+# light_dict = dict(zip(light_ID, light_pole_number))
+# print(light_dict)
 
-light_dict = dict(zip(light_ID, light_pole_number))
-print(light_dict)
 
-
-path = "D:\\work\\chengdu_log\\tmp\\"
+path = r"D:\work\chengdu_fix_analysis\2021-10-08_11_01" + "\\"
 file_lst = (f for f in os.listdir(path) if f.endswith('.csv'))
 
 
@@ -115,8 +115,6 @@ if __name__ == "__main__":
     date_list = []
     for file in file_lst:
         file_name = file[:-4]
-        if file_name not in light_ID:
-            continue
         time_of_date_bak = ""
         write_data = []
         gga = ''

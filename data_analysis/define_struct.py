@@ -62,5 +62,6 @@ def parser_str_bin(ss: str):
 
 
 if __name__ == "__main__":
-    ret = parser_str_bin(bin_str)
+    ret = parser_str_bin(bin_str)   # 可以像字典一样。          ret['plla']['alt']
+    rec_ret = np.rec.array(ret)     # 可以像 namedtuple 那样   rec_ret.plla.alt
     print('!')

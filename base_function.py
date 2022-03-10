@@ -100,6 +100,16 @@ def convert_ll_to_float(ll_str):
     return ll_int_part + ll_min_part
 
 
+def convert_float_to_ll(ll: float):
+    ll_fra, ll_int = math.modf(ll)
+    ll_degree = int(ll_int)
+    ll_minute = round(ll_fra * 60, 4)
+    if ll_minute < 10:
+        return str(ll_degree) + '0' + str(ll_minute)
+    else:
+        return str(ll_degree) + str(ll_minute)
+
+
 def degree_to_dms(old_str='116.00001'):
     """度 转 度分秒"""
     degree = int(old_str[:old_str.index('.')])

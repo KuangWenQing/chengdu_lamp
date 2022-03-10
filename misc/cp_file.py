@@ -1,0 +1,60 @@
+import os, shutil
+
+file_list_str = """000b7e423155
+000b7e42325a
+000b7e423246
+000b7e423210
+000b7e42334c
+000b7e42334f
+000b7e423162
+000b7e42331b
+000b7e42313d
+000b7e423156
+000b7e423166
+000b7e42319e
+000b7e4231b1
+000b7e4231d2
+000b7e4231d6
+000b7e423309
+000b7e4232e1
+000b7e423209
+000b7e423331
+000b7e4231ae
+000b7e42314a
+000b7e4232db
+000b7e4231f4
+000b7e42331c
+000b7e422e5e
+000b7e4231c9
+000b7e42322a
+000b7e423275
+000b7e422e45
+000b7e42325c
+000b7e423182
+000b7e422e60
+000b7e42316d
+000b7e422e4b
+000b7e42319d
+000b7e4231a9
+000b7e423221
+000b7e423297
+000b7e4231b2
+000b7e4232a3
+000b7e4231d5
+000b7e4231e8
+000b7e423324
+000b7e42333d
+000b7e4231aa
+000b7e42317c
+"""
+
+
+path = r"D:\work\chengdu_fix_analysis\2021-10-08_11_01\temp_kml" + "\\"
+
+dpath = r"D:\work\chengdu_fix_analysis\2021-10-08_11_01\hh" + "\\"
+
+for f in file_list_str.split():
+    file_list = [file for file in os.listdir(path) if file.startswith(f)]
+    for file in file_list:
+        print(file)
+        shutil.copyfile(path + file, dpath + file)
