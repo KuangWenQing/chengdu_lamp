@@ -29,4 +29,4 @@
 + last_gga_analysis.py 遍历 以年月日命名的文件夹， 计算每天最后一条GGA的误差，写表
 + whole_gga_analysis.py 遍历 whole_gga 文件夹，  计算所有时刻定位的误差，画图
 + last_AVE_analysis.py 用来计算 log文件中最后一条 'DEBUG R AVE,' 的位置误差。
-+ 该log文件是由spi输出的二进制文件转换而来。 转换工具是 *bin2log_rely_xml*
++ 该log文件是由spi输出的二进制文件转换而来。 转换工具是 **bin2log_rely_xml**
